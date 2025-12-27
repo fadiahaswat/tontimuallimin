@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hall of Fame - Caraka Bhaskara Muda</title>
-    <!-- Tailwind CSS -->
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
@@ -17,14 +17,18 @@
                 extend: {
                     colors: {
                         gold: {
-                            100: '#FEF9C3', 200: '#FDE68A', 300: '#FDE047', 400: '#FACC15',
-                            500: '#EAB308', 600: '#CA8A04', 700: '#A16207', 800: '#854D0E', 900: '#713F12',
+                            50: '#FBF7E3', 100: '#F7EFC3', 200: '#EFE088', 300: '#E6CF53', 
+                            400: '#DCC028', 500: '#C5A918', 600: '#A48810', 700: '#83690D', 
+                            800: '#67510F', 900: '#564213', 950: '#312406',
+                            // Custom Metallic Gold
+                            metallic: '#D4AF37',
                         },
                         maroon: {
-                            500: '#800000', 600: '#700000', 700: '#500000', 800: '#350000', 900: '#1a0000', 950: '#0f0000',
+                            500: '#800000', 600: '#700000', 700: '#600000', 
+                            800: '#4a0404', 900: '#2b0505', 950: '#1a0000',
                         },
                         dark: {
-                            950: '#050505', 900: '#0a0a0a', 850: '#0f0f0f', 800: '#141414', 700: '#202020',
+                            950: '#020202', 900: '#080808', 850: '#0f0f0f', 800: '#161616', 700: '#242424',
                         }
                     },
                     fontFamily: {
@@ -32,13 +36,22 @@
                         cinzel: ['"Cinzel"', 'serif'],
                         sans: ['"Outfit"', 'sans-serif'],
                     },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'gold-gradient': 'linear-gradient(135deg, #bf953f 0%, #fcf6ba 40%, #b38728 60%, #fbf5b7 100%)',
+                    },
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
+                        'shimmer': 'shimmer 2.5s linear infinite',
                     },
                     keyframes: {
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% center' },
+                            '100%': { backgroundPosition: '200% center' },
                         }
                     }
                 }
@@ -47,141 +60,235 @@
     </script>
 
     <style>
-        body { background-color: #050505; color: #F5F5F5; overflow-x: hidden; }
-        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-        .glass-panel { background: rgba(5, 5, 5, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-        .tilt-card-wrapper { perspective: 1000px; transform-style: preserve-3d; }
-        .tilt-card { background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); transform-style: preserve-3d; transition: transform 0.1s ease-out; position: relative; overflow: hidden; }
-        .tilt-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.06), transparent 40%); z-index: 3; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
-        .tilt-card:hover::before { opacity: 1; }
-        .tilt-card-content { transform: translateZ(20px); }
-        .tilt-card-img { transform: translateZ(0px); transition: transform 0.5s ease-out; }
-        .tilt-card:hover .tilt-card-img { transform: scale(1.1) translateZ(10px); }
-        .text-gold-texture { background: linear-gradient(to bottom, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0px 2px 10px rgba(179, 135, 40, 0.3); }
-        .hide-scroll::-webkit-scrollbar { display: none; } .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-        #loader { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease-out, visibility 0.8s; }
+        /* Base & Reset */
+        body { 
+            background-color: #020202; 
+            color: #F5F5F5; 
+            overflow-x: hidden; 
+            /* Noise texture overlay for premium feel */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+        
+        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.6; }
+        
+        /* Glassmorphism Utilities */
+        .glass-panel { 
+            background: rgba(8, 8, 8, 0.6); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+        .glass-card {
+            background: rgba(20, 20, 20, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* 3D Tilt Cards */
+        .tilt-card-wrapper { perspective: 1200px; transform-style: preserve-3d; }
+        .tilt-card { 
+            background: linear-gradient(160deg, #161616 0%, #0a0a0a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            transform-style: preserve-3d; 
+            transition: transform 0.1s ease-out, box-shadow 0.3s ease; 
+            position: relative; 
+            overflow: hidden; 
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.8);
+        }
+        /* Shine effect on hover */
+        .tilt-card::after {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
+            transform: skewX(-25deg);
+            transition: 0.7s;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .tilt-card:hover::after { left: 150%; transition: 0.7s ease-in-out; }
+        .tilt-card:hover { border-color: rgba(234, 179, 8, 0.3); box-shadow: 0 20px 50px -12px rgba(234, 179, 8, 0.15); }
+
+        .tilt-card-content { transform: translateZ(30px); }
+        .tilt-card-img-wrapper { transform: translateZ(0px); overflow: hidden; }
+        .tilt-card-img { transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); width: 100%; height: 100%; object-fit: cover; }
+        .tilt-card:hover .tilt-card-img { transform: scale(1.1); }
+        
+        /* Premium Text Effects */
+        .text-gold-texture { 
+            background: linear-gradient(to bottom, #cfc09f 0%, #ffecb3 20%, #bf953f 40%, #b38728 60%, #713f12 100%); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            filter: drop-shadow(0px 2px 0px rgba(0,0,0,0.5));
+        }
+        
+        /* Scrollbar */
+        .hide-scroll::-webkit-scrollbar { display: none; } 
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Custom Scrollbar for Body */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; border: 1px solid #000; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* Loader */
+        #loader { position: fixed; inset: 0; background: #020202; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease-out, visibility 0.8s; }
         .loader-hidden { opacity: 0; visibility: hidden; }
     </style>
 </head>
-<body class="font-sans antialiased selection:bg-gold-500 selection:text-black">
+<body class="font-sans antialiased selection:bg-gold-600/30 selection:text-gold-200">
 
-    <!-- Loading Screen -->
     <div id="loader">
-        <div class="text-center relative">
-            <div class="w-24 h-24 border-4 border-white/10 border-t-gold-500 rounded-full animate-spin mb-4 mx-auto"></div>
-            <h2 class="text-gold-400 font-cinzel tracking-[0.3em] text-xl animate-pulse">SINKRONISASI DATA</h2>
-            <p id="loading-text" class="text-neutral-500 text-xs mt-2 uppercase tracking-widest">Menghubungkan ke Google Sheet...</p>
+        <div class="text-center relative flex flex-col items-center">
+            <div class="relative w-32 h-32 mb-8">
+                <div class="absolute inset-0 border-t-2 border-gold-500 rounded-full animate-spin"></div>
+                <div class="absolute inset-2 border-r-2 border-maroon-600 rounded-full animate-spin" style="animation-duration: 2s; animation-direction: reverse;"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <i class="fas fa-star text-gold-400 text-2xl animate-pulse"></i>
+                </div>
+            </div>
+            <h2 class="text-white font-cinzel tracking-[0.4em] text-2xl font-bold">CARAKA</h2>
+            <div class="h-[1px] w-24 bg-gradient-to-r from-transparent via-gold-500 to-transparent my-3"></div>
+            <p id="loading-text" class="text-gold-500/60 text-[10px] uppercase tracking-[0.3em] animate-pulse">Memuat Data Prestasi...</p>
         </div>
     </div>
 
     <canvas id="particle-canvas"></canvas>
 
-    <!-- Navbar -->
-    <nav class="fixed w-full z-50 glass-panel transition-all duration-300" id="navbar">
+    <nav class="fixed w-full z-50 transition-all duration-500 border-b border-transparent" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-24">
-                <div class="flex items-center gap-4 group cursor-pointer">
-                    <div class="relative w-12 h-12 flex items-center justify-center">
-                        <div class="absolute inset-0 bg-maroon-600 rotate-45 rounded-lg opacity-80 group-hover:rotate-90 transition-transform duration-500"></div>
-                        <div class="absolute inset-0 border border-gold-500 rotate-45 rounded-lg scale-110 opacity-50 group-hover:scale-125 transition-transform duration-500"></div>
-                        <i class="fas fa-star text-gold-200 text-lg relative z-10 drop-shadow-lg"></i>
+                <div class="flex items-center gap-5 group cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="relative w-12 h-12 flex items-center justify-center transform group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-maroon-800 rotate-45 rounded-lg opacity-90 group-hover:rotate-180 transition-transform duration-700 ease-out border border-maroon-600"></div>
+                        <div class="absolute inset-0 border border-gold-400 rotate-45 rounded-lg scale-110 opacity-60 group-hover:rotate-90 group-hover:scale-125 transition-all duration-700"></div>
+                        <i class="fas fa-star text-gold-100 text-lg relative z-10 drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]"></i>
                     </div>
-                    <div>
-                        <span class="block font-cinzel text-2xl font-bold tracking-wide text-white leading-none group-hover:text-gold-200 transition-colors">Caraka</span>
-                        <span class="block text-[10px] text-gold-500 tracking-[0.4em] font-medium uppercase mt-1">Bhaskara Muda</span>
+                    <div class="flex flex-col">
+                        <span class="font-cinzel text-2xl font-bold tracking-wider text-white leading-none group-hover:text-gold-200 transition-colors drop-shadow-lg">Caraka</span>
+                        <span class="text-[9px] text-gold-500 tracking-[0.5em] font-bold uppercase mt-1.5 ml-0.5 group-hover:tracking-[0.6em] transition-all">Bhaskara Muda</span>
                     </div>
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#" class="text-gold-400 relative py-2 text-sm font-medium tracking-widest uppercase text-[10px]">
+                    <div class="h-8 w-[1px] bg-white/10"></div>
+                    <a href="#" class="text-gold-100/80 hover:text-white relative py-2 text-[11px] font-bold tracking-[0.25em] uppercase transition-all group">
                         Hall of Fame
-                        <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-gold-500 rounded-full shadow-[0_0_10px_#FACC15]"></span>
+                        <span class="absolute bottom-0 left-0 w-0 h-[1px] bg-gold-400 transition-all duration-300 group-hover:w-full box-shadow-[0_0_8px_#FACC15]"></span>
                     </a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero -->
     <header class="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pt-20">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[800px] bg-gradient-radial from-maroon-900/30 via-transparent to-transparent pointer-events-none blur-3xl"></div>
-        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gold-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1200px] h-[800px] bg-gradient-radial from-maroon-900/40 via-transparent to-transparent pointer-events-none blur-[120px] mix-blend-screen"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-gold-700/10 rounded-full blur-[100px] pointer-events-none animate-pulse" style="animation-duration: 4s;"></div>
 
         <div class="relative max-w-7xl mx-auto text-center z-10">
-            <div id="data-source-badge" class="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 mb-10 backdrop-blur-md animate-float border-t-gold-500/30 shadow-[0_0_30px_-10px_rgba(234,179,8,0.2)]">
-                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_#22c55e]"></div>
-                <span class="text-white/80 text-xs font-bold tracking-[0.2em] uppercase font-sans">Live Database Record</span>
+            <div id="data-source-badge" class="inline-flex items-center gap-3 px-5 py-1.5 rounded-full bg-black/40 border border-white/10 mb-12 backdrop-blur-md animate-float shadow-[0_0_30px_-10px_rgba(0,0,0,0.5)] group hover:border-gold-500/30 transition-colors cursor-default">
+                <div class="relative w-2 h-2">
+                    <div class="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-75"></div>
+                    <div class="relative w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
+                </div>
+                <span class="text-neutral-400 text-[10px] font-bold tracking-[0.25em] uppercase font-sans group-hover:text-white transition-colors">System Online</span>
             </div>
             
-            <h1 class="text-6xl md:text-8xl lg:text-9xl font-cinzel font-bold text-white mb-8 leading-tight drop-shadow-2xl">
-                HALL OF <br>
-                <span class="text-gold-texture relative inline-block">FAME</span>
+            <h1 class="text-5xl md:text-7xl lg:text-9xl font-cinzel font-black text-white mb-6 leading-[0.9] drop-shadow-2xl tracking-tight">
+                HALL <span class="text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-600 text-[0.8em] font-serif italic font-light block md:inline my-2 md:my-0">of</span><br>
+                <span class="text-gold-texture relative inline-block filter drop-shadow-[0_0_25px_rgba(161,98,7,0.2)]">FAME</span>
             </h1>
             
-            <p class="text-neutral-400 text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed font-light tracking-wide">
-                Rekam jejak perjuangan lintas generasi. <br>
-                <span class="text-gold-500 font-serif italic">"Dari Angkatan, Oleh Angkatan, Untuk Mu'allimin"</span>
+            <div class="flex items-center justify-center gap-4 mb-10 opacity-80">
+                <div class="h-[1px] w-12 bg-gradient-to-r from-transparent to-gold-500"></div>
+                <i class="fas fa-crown text-gold-500 text-sm"></i>
+                <div class="h-[1px] w-12 bg-gradient-to-l from-transparent to-gold-500"></div>
+            </div>
+
+            <p class="text-neutral-300 text-base md:text-lg max-w-2xl mx-auto mb-14 leading-relaxed font-light tracking-wide px-4">
+                Rekam jejak abadi perjuangan para ksatria.<br>
+                <span class="text-gold-400 font-serif italic text-xl mt-2 block">"Dari Angkatan, Oleh Angkatan, Untuk Mu'allimin"</span>
             </p>
 
-            <button onclick="document.getElementById('achievements-section').scrollIntoView()" class="group relative px-10 py-4 bg-transparent overflow-hidden rounded-full border border-gold-500/30 hover:border-gold-500 transition-all duration-300">
-                <div class="absolute inset-0 w-0 bg-gold-600 transition-all duration-[250ms] ease-out group-hover:w-full opacity-20"></div>
-                <span class="relative text-gold-400 group-hover:text-white text-sm font-bold tracking-[0.2em] uppercase flex items-center gap-2">
-                    Jelajahi Prestasi <i class="fas fa-chevron-down animate-bounce"></i>
+            <button onclick="document.getElementById('achievements-section').scrollIntoView()" class="group relative px-8 py-3 bg-transparent overflow-hidden rounded-sm border border-gold-600/40 hover:border-gold-500 transition-all duration-500">
+                <div class="absolute inset-0 bg-gold-600/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+                <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-gold-400 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700"></div>
+                <div class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-gold-400 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700 delay-100"></div>
+                
+                <span class="relative text-gold-300 group-hover:text-white text-xs font-bold tracking-[0.3em] uppercase flex items-center gap-3">
+                    Jelajahi Prestasi <i class="fas fa-arrow-down text-[10px] group-hover:translate-y-1 transition-transform"></i>
                 </span>
             </button>
         </div>
     </header>
 
-    <!-- Content -->
-    <main id="achievements-section" class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-20">
+    <main id="achievements-section" class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-20">
         
-        <!-- Controls -->
-        <div class="sticky top-24 z-40 mb-16">
-            <div class="bg-dark-850/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                <div class="flex flex-col lg:flex-row gap-8 justify-between items-start lg:items-center">
-                    <div>
-                        <h3 class="text-white font-cinzel font-bold text-2xl mb-1 flex items-center gap-2">
-                            <i class="fas fa-trophy text-gold-500"></i> Ruang Trofi
-                        </h3>
-                        <p class="text-neutral-500 text-xs tracking-wider uppercase">Dokumentasi Visual & Data</p>
-                    </div>
-
-                    <div class="flex flex-col gap-4 w-full lg:w-auto">
-                        <div class="flex bg-black/40 p-1 rounded-lg border border-white/5 self-start lg:self-end">
-                            <button onclick="setFilter('level', 'all')" class="level-btn active px-5 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all text-black bg-gold-500">Semua</button>
-                            <button onclick="setFilter('level', 'aliyah')" class="level-btn px-5 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all text-neutral-400 hover:text-white">SMA</button>
-                            <button onclick="setFilter('level', 'tsanawiyah')" class="level-btn px-5 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all text-neutral-400 hover:text-white">SMP</button>
+        <div class="sticky top-28 z-40 mb-20">
+            <div class="bg-dark-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-1 shadow-2xl relative overflow-hidden ring-1 ring-white/5">
+                <div class="bg-black/40 rounded-lg p-5 border border-white/5">
+                    <div class="flex flex-col lg:flex-row gap-8 justify-between items-start lg:items-center">
+                        <div class="border-l-2 border-gold-500 pl-4">
+                            <h3 class="text-white font-cinzel font-bold text-2xl mb-1 flex items-center gap-2">
+                                Ruang Trofi
+                            </h3>
+                            <p class="text-neutral-500 text-[10px] tracking-[0.2em] uppercase">Arsip Data & Dokumentasi Visual</p>
                         </div>
-                        <div class="flex items-center gap-3 w-full lg:max-w-xl">
-                            <span class="text-[10px] text-gold-500 font-bold uppercase whitespace-nowrap px-2 py-1 rounded bg-gold-500/10 border border-gold-500/20">Angkatan</span>
-                            <div class="flex overflow-x-auto gap-2 pb-2 hide-scroll w-full" id="batch-filter-container"></div>
+
+                        <div class="flex flex-col gap-5 w-full lg:w-auto">
+                            <div class="flex bg-black/60 p-1 rounded-md border border-white/10 self-start lg:self-end shadow-inner">
+                                <button onclick="setFilter('level', 'all')" class="level-btn active px-6 py-2 rounded-[4px] text-[10px] font-bold uppercase tracking-widest transition-all text-black bg-gold-500 shadow-[0_0_15px_rgba(202,138,4,0.4)]">Semua</button>
+                                <button onclick="setFilter('level', 'aliyah')" class="level-btn px-6 py-2 rounded-[4px] text-[10px] font-bold uppercase tracking-widest transition-all text-neutral-500 hover:text-white hover:bg-white/5">SMA</button>
+                                <button onclick="setFilter('level', 'tsanawiyah')" class="level-btn px-6 py-2 rounded-[4px] text-[10px] font-bold uppercase tracking-widest transition-all text-neutral-500 hover:text-white hover:bg-white/5">SMP</button>
+                            </div>
+                            
+                            <div class="flex items-center gap-4 w-full lg:max-w-2xl bg-white/5 p-2 rounded-lg border border-white/5">
+                                <div class="flex items-center gap-2 text-gold-500/80 px-2 border-r border-white/10 pr-4">
+                                    <i class="fas fa-filter text-xs"></i>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider">Angkatan</span>
+                                </div>
+                                <div class="flex overflow-x-auto gap-2 hide-scroll w-full relative mask-linear" id="batch-filter-container">
+                                    </div>
+                                <div class="w-8 h-full absolute right-0 bg-gradient-to-l from-black/50 to-transparent pointer-events-none lg:hidden"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="members-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 perspective-container"></div>
+        <div id="members-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 perspective-container pb-20">
+            </div>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-black border-t border-white/5 pt-20 pb-10 mt-20 relative overflow-hidden">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-gold-800 to-transparent"></div>
+    <footer class="bg-black border-t border-white/10 pt-24 pb-12 mt-20 relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-[1px] bg-gradient-to-r from-transparent via-gold-800 to-transparent opacity-50"></div>
         <div class="max-w-7xl mx-auto px-4 text-center relative z-10">
-            <h2 class="font-cinzel text-3xl font-bold text-white mb-2 tracking-widest">CARAKA BHASKARA MUDA</h2>
-            <p class="text-gold-500/60 text-xs tracking-[0.3em] uppercase">The Pride of Mu'allimin</p>
-            <p class="text-neutral-700 text-[10px] uppercase tracking-widest mt-10">&copy; 2025 Official Documentation.</p>
+            <div class="mb-8 flex justify-center">
+                <div class="w-16 h-16 border border-white/10 rotate-45 flex items-center justify-center bg-dark-900">
+                    <i class="fas fa-star text-gold-600 -rotate-45 text-xl"></i>
+                </div>
+            </div>
+            <h2 class="font-cinzel text-3xl font-bold text-white mb-3 tracking-[0.2em]">CARAKA BHASKARA MUDA</h2>
+            <p class="text-gold-500/40 text-[10px] tracking-[0.4em] uppercase mb-10">The Pride of Mu'allimin Yogyakarta</p>
+            
+            <div class="flex justify-center gap-6 mb-10 text-neutral-600 text-lg">
+                <a href="#" class="hover:text-gold-500 transition-colors"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="hover:text-gold-500 transition-colors"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="hover:text-gold-500 transition-colors"><i class="fas fa-globe"></i></a>
+            </div>
+
+            <p class="text-neutral-800 text-[10px] uppercase tracking-widest font-mono">© 2025 Official Hall of Fame Documentation.</p>
         </div>
     </footer>
 
-    <!-- JS Logic -->
     <script>
         // --- GOOGLE SHEET CONFIGURATION ---
-        // Masukkan URL Web App (Exec URL) dari Google Apps Script di sini:
+        // Gunakan URL Web App (Exec URL) yang sudah Anda deploy
         const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbypmmWtjjbijjxHClfKmcgpBtI75m7Qiperxmma4AVbZgvzj3OREfs_GzOXtFK9SsDpig/exec'; 
 
-        // --- PLACEHOLDER IMAGES ---
+        // --- PLACEHOLDER IMAGES (High Quality Dark Aesthetic) ---
         const placeholderImages = [
             "https://images.unsplash.com/photo-1545959682-a384f57c5f49?q=80&w=800&auto=format&fit=crop", 
             "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?q=80&w=800&auto=format&fit=crop",
@@ -196,11 +303,10 @@
         function formatGoogleDriveUrl(url) {
             if (!url) return null;
             if (url.includes('drive.google.com') && (url.includes('/view') || url.includes('/file/d/'))) {
-                // Extract File ID
                 const idMatch = url.match(/\/d\/(.*?)\/|id=(.*?)(&|$)/);
                 const fileId = idMatch ? (idMatch[1] || idMatch[2]) : null;
                 if (fileId) {
-                    return `https://lh3.googleusercontent.com/d/${fileId}=w1000`; // High quality Direct Link
+                    return `https://lh3.googleusercontent.com/d/${fileId}=w1000`; // HQ Direct Link
                 }
             }
             return url;
@@ -212,7 +318,9 @@
 
         window.addEventListener('load', async () => {
             await initializeData();
-            document.getElementById('loader').classList.add('loader-hidden');
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('loader-hidden');
+            }, 500); // Sedikit delay agar transisi halus
             initParticles();
             animateParticles();
         });
@@ -226,16 +334,25 @@
                     
                     const badge = document.getElementById('data-source-badge');
                     if(badge) {
-                         badge.querySelector('span').innerText = "LIVE DATABASE CONNECTED";
-                         badge.querySelector('div').classList.remove('bg-green-500');
-                         badge.querySelector('div').classList.add('bg-blue-500', 'animate-pulse');
+                         const span = badge.querySelector('span');
+                         const light = badge.querySelector('.bg-green-500'); // Inner dot
+                         const ping = badge.querySelector('.animate-ping');
+                         
+                         span.innerText = "DATABASE CONNECTED";
+                         span.classList.remove('text-neutral-400');
+                         span.classList.add('text-gold-200');
+                         
+                         light.classList.replace('bg-green-500', 'bg-blue-400');
+                         ping.classList.replace('bg-green-500', 'bg-blue-400');
                     }
                 } catch (error) {
                     console.error("Error fetching:", error);
+                    const loadingText = document.getElementById('loading-text');
+                    if(loadingText) {
+                        loadingText.innerText = "GAGAL MENGHUBUNGKAN DATA";
+                        loadingText.classList.add('text-red-500');
+                    }
                 }
-            } else {
-                // Fallback jika belum konek
-                console.warn("URL Google Sheet belum diisi");
             }
             initBatchFilters();
             renderMembers();
@@ -246,9 +363,11 @@
             achievementsData.forEach(item => { if(item.batches) item.batches.forEach(b => allBatches.add(b)); });
             const sortedBatches = Array.from(allBatches).sort((a,b) => parseInt(a) - parseInt(b));
             const container = document.getElementById('batch-filter-container');
-            let html = `<button onclick="setFilter('batch', 'all')" class="batch-btn active flex-shrink-0 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase border border-gold-500 bg-gold-500 text-black shadow-[0_0_10px_rgba(234,179,8,0.3)]">SEMUA</button>`;
+            
+            let html = `<button onclick="setFilter('batch', 'all')" class="batch-btn active flex-shrink-0 px-4 py-1.5 rounded text-[10px] font-bold uppercase border border-gold-500 bg-gold-500 text-black shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all">SEMUA</button>`;
+            
             sortedBatches.forEach(batch => {
-                html += `<button onclick="setFilter('batch', '${batch}')" class="batch-btn flex-shrink-0 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase border border-white/10 bg-dark-800 text-neutral-400 hover:bg-maroon-900 hover:text-white hover:border-maroon-500">#${batch}</button>`;
+                html += `<button onclick="setFilter('batch', '${batch}')" class="batch-btn flex-shrink-0 px-4 py-1.5 rounded text-[10px] font-bold uppercase border border-white/10 bg-dark-800 text-neutral-400 hover:bg-maroon-900 hover:text-white hover:border-maroon-500 transition-all font-mono">#${batch}</button>`;
             });
             container.innerHTML = html;
         }
@@ -266,12 +385,12 @@
                 const isActive = btn.getAttribute('onclick').includes(`'${value}'`);
                 if(type === 'level') {
                     btn.className = isActive 
-                        ? "level-btn active px-5 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all text-black bg-gold-500 shadow-[0_0_15px_rgba(234,179,8,0.4)]"
-                        : "level-btn px-5 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all text-neutral-400 hover:text-white bg-transparent";
+                        ? "level-btn active px-6 py-2 rounded-[4px] text-[10px] font-bold uppercase tracking-widest transition-all text-black bg-gold-500 shadow-[0_0_15px_rgba(202,138,4,0.4)]"
+                        : "level-btn px-6 py-2 rounded-[4px] text-[10px] font-bold uppercase tracking-widest transition-all text-neutral-500 hover:text-white hover:bg-white/5";
                 } else {
                     btn.className = isActive
-                        ? "batch-btn active flex-shrink-0 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase border border-gold-500 bg-gold-500 text-black shadow-[0_0_10px_rgba(234,179,8,0.3)]"
-                        : "batch-btn flex-shrink-0 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase border border-white/10 bg-dark-800 text-neutral-400 hover:bg-maroon-900 hover:text-white hover:border-maroon-500";
+                        ? "batch-btn active flex-shrink-0 px-4 py-1.5 rounded text-[10px] font-bold uppercase border border-gold-500 bg-gold-500 text-black shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all font-mono"
+                        : "batch-btn flex-shrink-0 px-4 py-1.5 rounded text-[10px] font-bold uppercase border border-white/10 bg-dark-800 text-neutral-400 hover:bg-maroon-900 hover:text-white hover:border-maroon-500 transition-all font-mono";
                 }
             });
         }
@@ -288,84 +407,154 @@
 
             filteredData.forEach((item, index) => {
                 const card = document.createElement('div');
-                card.className = `tilt-card-wrapper fade-in opacity-0`;
-                card.style.animation = `fadeIn 0.6s ease-out forwards ${index * 0.05}s`;
+                card.className = `tilt-card-wrapper fade-in opacity-0 h-full`;
+                card.style.animation = `fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards ${index * 0.05}s`;
 
-                let badgeColor = item.tags.includes('aliyah') ? 'bg-maroon-900 border-maroon-700 text-white' : 'bg-dark-800 border-white/10 text-neutral-300';
-                if (item.tags.includes('aliyah') && item.tags.includes('tsanawiyah')) badgeColor = 'bg-gradient-to-r from-maroon-900 to-dark-800 border-white/10 text-white';
+                // Badge Logic
+                let badgeClass = 'bg-dark-800 border-white/10 text-neutral-300';
+                if (item.tags.includes('aliyah')) badgeClass = 'bg-maroon-900/90 border-maroon-700 text-white shadow-[0_0_10px_rgba(128,0,0,0.5)]';
+                if (item.tags.includes('aliyah') && item.tags.includes('tsanawiyah')) badgeClass = 'bg-gradient-to-r from-maroon-900 to-dark-800 border-gold-900/50 text-gold-100';
                 
-                // IMAGE LOGIC: Custom or Placeholder
+                // Image Logic
                 const rawImgUrl = item.image_url;
                 const cardImage = rawImgUrl ? formatGoogleDriveUrl(rawImgUrl) : getPlaceholderImg(index);
 
+                // List Items Logic
                 const listItems = item.items.map(text => {
-                    const highlight = text.toLowerCase().includes('juara 1') || text.toLowerCase().includes('umum') || text.toLowerCase().includes('terbaik');
-                    const colorClass = highlight ? 'text-gold-300 font-bold' : 'text-neutral-400';
-                    const icon = highlight ? '<i class="fas fa-trophy text-[10px] text-gold-500 mt-1"></i>' : '<i class="fas fa-medal text-[10px] text-neutral-600 mt-1"></i>';
-                    const glowClass = highlight ? 'drop-shadow-[0_0_5px_rgba(250,204,21,0.3)]' : '';
-                    return `<li class="mb-2 flex items-start gap-3 ${colorClass} ${glowClass}">${icon}<span class="flex-1">${text}</span></li>`;
+                    const isWinner = text.toLowerCase().includes('juara 1') || text.toLowerCase().includes('umum') || text.toLowerCase().includes('terbaik') || text.toLowerCase().includes('emas');
+                    const colorClass = isWinner ? 'text-gold-200 font-medium' : 'text-neutral-400';
+                    const icon = isWinner 
+                        ? '<i class="fas fa-trophy text-[10px] text-gold-500 mt-1.5 drop-shadow-[0_0_5px_rgba(234,179,8,0.8)]"></i>' 
+                        : '<div class="w-1.5 h-1.5 rounded-full bg-neutral-700 mt-2 border border-neutral-600"></div>';
+                    const bgHighlight = isWinner ? 'bg-gradient-to-r from-gold-500/10 to-transparent -mx-2 px-2 rounded' : '';
+                    
+                    return `<li class="mb-2 flex items-start gap-3 ${colorClass} ${bgHighlight} py-0.5">${icon}<span class="flex-1 leading-relaxed">${text}</span></li>`;
                 }).join('');
 
-                const batchTags = item.batches ? item.batches.map(b => `<span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-black/50 text-white/70 border border-white/10 tracking-widest font-mono">#${b}</span>`).join(' ') : '';
+                const batchTags = item.batches ? item.batches.map(b => `<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-black/80 text-neutral-400 border border-white/10 font-mono">#${b}</span>`).join(' ') : '';
 
                 card.innerHTML = `
-                    <div class="tilt-card rounded-xl h-full flex flex-col group">
-                        <div class="h-56 w-full relative overflow-hidden rounded-t-xl tilt-card-img-wrapper">
-                            <div class="absolute inset-0 bg-gradient-to-t from-dark-850 via-transparent to-transparent z-10"></div>
-                            <div class="absolute inset-0 bg-maroon-900/10 mix-blend-overlay z-10"></div>
-                            <img src="${cardImage}" alt="${item.event}" class="tilt-card-img w-full h-full object-cover">
-                            <div class="absolute top-4 right-4 z-20 ${badgeColor} text-[9px] font-bold px-3 py-1.5 rounded-full shadow-xl border backdrop-blur-md tracking-widest uppercase">${item.level_label || 'Umum'}</div>
-                            <div class="absolute bottom-4 left-4 z-20 w-[90%]">
-                                <div class="flex gap-1 flex-wrap mb-1">${batchTags}</div>
-                                <div class="text-[9px] text-gold-400 font-bold uppercase tracking-widest truncate"><i class="fas fa-building mr-1"></i> ${item.organizer}</div>
+                    <div class="tilt-card rounded-[4px] h-full flex flex-col group bg-dark-850">
+                        <div class="h-60 w-full relative tilt-card-img-wrapper border-b border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent z-10 opacity-90"></div>
+                            <img src="${cardImage}" alt="${item.event}" class="tilt-card-img w-full h-full object-cover filter grayscale-[30%] group-hover:grayscale-0 transition-all duration-700">
+                            
+                            <div class="absolute top-4 right-4 z-20 ${badgeClass} text-[9px] font-bold px-3 py-1.5 rounded backdrop-blur-md tracking-[0.2em] uppercase border">${item.level_label || 'UMUM'}</div>
+                            
+                            <div class="absolute bottom-0 left-0 z-20 w-full p-5">
+                                <div class="flex gap-1 flex-wrap mb-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500">${batchTags}</div>
+                                <div class="text-[9px] text-gold-500 font-bold uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <span class="w-2 h-[1px] bg-gold-500"></span> ${item.organizer}
+                                </div>
                             </div>
                         </div>
-                        <div class="p-6 tilt-card-content flex-grow relative bg-gradient-to-b from-dark-850 to-dark-900">
-                            <div class="flex items-center justify-between text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-3 border-b border-white/5 pb-3">
-                                <span class="text-gold-600"><i class="far fa-calendar-alt mr-1"></i> ${item.date_month} ${item.year}</span>
-                                <span>${item.scope}</span>
+                        
+                        <div class="p-6 tilt-card-content flex-grow relative">
+                            <div class="flex items-center justify-between text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-4 border-b border-white/5 pb-3">
+                                <span class="text-gold-600 group-hover:text-gold-400 transition-colors"><i class="far fa-calendar-alt mr-2"></i>${item.date_month} ${item.year}</span>
+                                <span class="bg-white/5 px-2 py-0.5 rounded text-neutral-400">${item.scope}</span>
                             </div>
-                            <h3 class="text-xl font-cinzel font-bold text-white leading-tight mb-4 group-hover:text-gold-200 transition-colors">${item.event}</h3>
-                            <p class="text-[10px] text-neutral-400 mb-4 flex items-center"><i class="fas fa-map-pin mr-2 text-maroon-500"></i> ${item.location}</p>
-                            <div class="relative"><ul class="text-xs leading-relaxed space-y-1">${listItems}</ul></div>
+                            
+                            <h3 class="text-xl font-cinzel font-bold text-white leading-tight mb-2 group-hover:text-gold-200 transition-colors">${item.event}</h3>
+                            <p class="text-[10px] text-maroon-500 font-bold uppercase tracking-wider mb-5 flex items-center">
+                                <i class="fas fa-map-marker-alt mr-2"></i> ${item.location}
+                            </p>
+                            
+                            <div class="relative pl-1 border-l border-white/10 group-hover:border-gold-500/30 transition-colors">
+                                <ul class="text-xs space-y-1">${listItems}</ul>
+                            </div>
                         </div>
-                        <div class="h-1 w-full bg-gradient-to-r from-maroon-800 via-gold-600 to-maroon-800 opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        <div class="h-[2px] w-full bg-dark-900 relative overflow-hidden">
+                             <div class="absolute inset-0 bg-gold-500 w-0 group-hover:w-full transition-all duration-700 ease-out"></div>
+                        </div>
                     </div>
                 `;
                 grid.appendChild(card);
             });
             initTiltEffect();
-            if (filteredData.length === 0) grid.innerHTML = `<div class="col-span-3 text-center py-20 text-neutral-500">Data tidak ditemukan.</div>`;
+            if (filteredData.length === 0) grid.innerHTML = `<div class="col-span-3 flex flex-col items-center justify-center py-20 text-neutral-600 border border-white/5 rounded-lg bg-white/5 border-dashed"><i class="far fa-folder-open text-4xl mb-4"></i><p class="uppercase tracking-widest text-xs">Data tidak ditemukan untuk filter ini.</p></div>`;
         }
 
         // --- EFFECTS: PARTICLES & TILT ---
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
         let particlesArray = [];
+        
         class Particle {
-            constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.dx = (Math.random() * 0.2) - 0.1; this.dy = (Math.random() * 0.2) - 0.1; this.size = Math.random() * 2; this.color = Math.random() > 0.5 ? '#FACC15' : '#800000'; this.opacity = Math.random() * 0.5; }
-            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false); ctx.globalAlpha = this.opacity; ctx.fillStyle = this.color; ctx.fill(); }
-            update() { if (this.x > canvas.width || this.x < 0) this.dx = -this.dx; if (this.y > canvas.height || this.y < 0) this.dy = -this.dy; this.x += this.dx; this.y += this.dy; this.draw(); }
+            constructor() { 
+                this.x = Math.random() * canvas.width; 
+                this.y = Math.random() * canvas.height; 
+                this.dx = (Math.random() * 0.2) - 0.1; 
+                this.dy = (Math.random() * 0.2) - 0.1; 
+                this.size = Math.random() * 1.5; 
+                this.color = Math.random() > 0.6 ? '#FACC15' : '#555555'; // Gold or Grey
+                this.opacity = Math.random() * 0.4; 
+            }
+            draw() { 
+                ctx.beginPath(); 
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false); 
+                ctx.globalAlpha = this.opacity; 
+                ctx.fillStyle = this.color; 
+                ctx.fill(); 
+            }
+            update() { 
+                if (this.x > canvas.width || this.x < 0) this.dx = -this.dx; 
+                if (this.y > canvas.height || this.y < 0) this.dy = -this.dy; 
+                this.x += this.dx; 
+                this.y += this.dy; 
+                this.draw(); 
+            }
         }
-        function initParticles() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; particlesArray = []; for (let i = 0; i < (canvas.height * canvas.width) / 15000; i++) particlesArray.push(new Particle()); }
-        function animateParticles() { requestAnimationFrame(animateParticles); ctx.clearRect(0, 0, canvas.width, canvas.height); particlesArray.forEach(p => p.update()); }
+        
+        function initParticles() { 
+            canvas.width = window.innerWidth; 
+            canvas.height = window.innerHeight; 
+            particlesArray = []; 
+            // Reduce density for better performance and cleaner look
+            const count = (canvas.height * canvas.width) / 20000;
+            for (let i = 0; i < count; i++) particlesArray.push(new Particle()); 
+        }
+        
+        function animateParticles() { 
+            requestAnimationFrame(animateParticles); 
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            particlesArray.forEach(p => p.update()); 
+        }
         window.addEventListener('resize', initParticles);
 
         function initTiltEffect() {
             document.querySelectorAll('.tilt-card').forEach(card => {
                 card.addEventListener('mousemove', function(e) {
                     const rect = this.getBoundingClientRect();
-                    const x = e.clientX - rect.left; const y = e.clientY - rect.top;
-                    const rotateX = ((y - rect.height/2) / (rect.height/2)) * -5;
-                    const rotateY = ((x - rect.width/2) / (rect.width/2)) * 5;
+                    const x = e.clientX - rect.left; 
+                    const y = e.clientY - rect.top;
+                    // Subtle tilt
+                    const rotateX = ((y - rect.height/2) / (rect.height/2)) * -4;
+                    const rotateY = ((x - rect.width/2) / (rect.width/2)) * 4;
                     this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-                    this.style.setProperty('--mouse-x', `${x}px`); this.style.setProperty('--mouse-y', `${y}px`);
                 });
-                card.addEventListener('mouseleave', function() { this.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`; });
+                card.addEventListener('mouseleave', function() { 
+                    this.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`; 
+                });
             });
         }
-        const style = document.createElement('style'); style.textContent = `@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }`; document.head.appendChild(style);
-        window.addEventListener('scroll', () => { const navbar = document.getElementById('navbar'); window.scrollY > 50 ? (navbar.classList.add('bg-black/90', 'shadow-2xl'), navbar.classList.remove('glass-panel')) : (navbar.classList.remove('bg-black/90', 'shadow-2xl'), navbar.classList.add('glass-panel')); });
+        
+        const style = document.createElement('style'); 
+        style.textContent = `@keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }`; 
+        document.head.appendChild(style);
+        
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => { 
+            const navbar = document.getElementById('navbar'); 
+            if(window.scrollY > 50) {
+                navbar.classList.add('bg-black/80', 'backdrop-blur-md', 'border-b', 'border-white/5', 'shadow-2xl');
+                navbar.classList.remove('border-transparent');
+            } else {
+                navbar.classList.remove('bg-black/80', 'backdrop-blur-md', 'border-b', 'border-white/5', 'shadow-2xl');
+                navbar.classList.add('border-transparent');
+            }
+        });
     </script>
 </body>
 </html>
